@@ -18,7 +18,7 @@ This is a multi-class text classification task. In total, we have got 48 countri
 
 In NLP tasks, the input are sentences or documents represented as matrix. In this specific project, our input is the description which includes several sentences. So how it refers to a matrix? Each row of the matrix corresponds to one token, typically a word. Each row is a vector representing a word. Both word embeddings such as word2vec and one-hot vectors can be applied to represent those vectors. The filters in a CNN can be used to slide over full rows of the matrix. A typical example for CNN on NLP tasks will be like the following:
 
-![cnn_model](/iages/cnn_model.png)
+![cnn_model](/images/cnn_model.png)
 
 ## Data
 
