@@ -60,9 +60,7 @@ class TextCNNRNN(object):
 		
 
 		self._initial_state = lstm_cell.zero_state(self.batch_size, tf.float32)
-		#inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(1, reduced, pooled_concat)]
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
-		#outputs, state = tf.nn.rnn(lstm_cell, inputs, initial_state=self._initial_state, sequence_length=self.real_len)
 		outputs, state = tf.contrib.rnn.static_rnn(lstm_cell, inputs, initial_state=self._initial_state, sequence_length=self.real_len)
 
 		# Collect the appropriate last words into variable output (dimension = batch x embedding_size)

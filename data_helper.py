@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Dec  8 16:38:19 2018
+
+@author: youko
+"""
+
 import os
 import re
 import sys
@@ -15,6 +22,8 @@ from tensorflow.contrib import learn
 logging.getLogger().setLevel(logging.INFO)
 
 def clean_str(s):
+	''' function for cleaning the raw text strings
+	'''
 	s = re.sub(r"[^A-Za-z0-9:(),!?\'\`]", " ", s)
 	s = re.sub(r" : ", ":", s)
 	s = re.sub(r"\'s", " \'s", s)
@@ -32,16 +41,28 @@ def clean_str(s):
 	return s.strip().lower()
 
 def load_embeddings(vocabulary):
+	'''for a given vocabulary set, initialize an embedding as representation for each lexicon
+	will return a dictionary representation of the vocabulary set
+	'''
 	word_embeddings = {}
 	for word in vocabulary:
+		# the values could be differentiated
 		word_embeddings[word] = np.random.uniform(-0.25, 0.25, 300)
 	return word_embeddings
 
 def pad_sentences(sentences, padding_word="<PAD/>", forced_sequence_length=None):
-	"""Pad setences during training or prediction"""
-	if forced_sequence_length is None: # Train
+	'''Pad setences during training or prediction
+	forced_sequence_length deals with the maximum length allowed for input text
+	For large data set, it would be more efficient to simply set a value.
+	it is allowed to have forced_sequence_length shorter than maximum
+	'''
+
+	if forced_sequence_length is None: 
+		# Train
+		# did not specify the maximum sequence length
 		sequence_length = max(len(x) for x in sentences)
 	else: # Prediction
+		# use the given value for maximum length based on training set 
 		logging.critical('This is prediction, reading the trained sequence length')
 		sequence_length = forced_sequence_length
 	logging.critical('The maximum length is {}'.format(sequence_length))
@@ -51,7 +72,8 @@ def pad_sentences(sentences, padding_word="<PAD/>", forced_sequence_length=None)
 		sentence = sentences[i]
 		num_padding = sequence_length - len(sentence)
 
-		if num_padding < 0: # Prediction: cut off the sentence if it is longer than the sequence length
+		if num_padding < 0: 
+			# Prediction: cut off the sentence if it is longer than the sequence length
 			logging.info('This sentence has to be cut off because it is longer than trained sequence length')
 			padded_sentence = sentence[0:sequence_length]
 		else:
@@ -60,12 +82,18 @@ def pad_sentences(sentences, padding_word="<PAD/>", forced_sequence_length=None)
 	return padded_sentences
 
 def build_vocab(sentences):
+	'''this function is to build a vocabulary set given sentences
+	'''
 	word_counts = Counter(itertools.chain(*sentences))
+	# create inverted index for vocabulary set 
 	vocabulary_inv = [word[0] for word in word_counts.most_common()]
 	vocabulary = {word: index for index, word in enumerate(vocabulary_inv)}
 	return vocabulary, vocabulary_inv
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):
+	'''function to iterate batches
+	notice that these parameters should be pre-tuned
+	'''
 	data = np.array(data)
 	data_size = len(data)
 	num_batches_per_epoch = int(data_size / batch_size) + 1
@@ -83,8 +111,10 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
 			yield shuffled_data[start_index:end_index]
 
 def load_data(filename):
+		'''load data for training. 
+	'''
 	df = pd.read_csv(filename, compression='zip')
-	selected = ['Category', 'Descript']
+	selected = ['country','description']
 	non_selected = list(set(df.columns) - set(selected))
 
 	df = df.drop(non_selected, axis=1)
@@ -108,5 +138,6 @@ def load_data(filename):
 	return x, y, vocabulary, vocabulary_inv, df, labels
 
 if __name__ == "__main__":
-	train_file = './data/train.csv.zip'
+	train_file = sys.argv[1]
+	# here we already specify the label and input 
 	load_data(train_file)

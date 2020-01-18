@@ -21,8 +21,8 @@ from sklearn.model_selection import train_test_split
 
 logging.getLogger().setLevel(logging.INFO)
 
-def train_cnn_rnn():
-	input_file = 'train.csv.zip'
+def train_cnn_rnn(input_file):
+	#input_file = 'train.csv.zip'
 	x_, y_, vocabulary, vocabulary_inv, df, labels = data_helper.load_data(input_file)
 
 	training_config = 'training_config.json'
@@ -163,5 +163,7 @@ def train_cnn_rnn():
 		json.dump(params, outfile, indent=4, sort_keys=True, ensure_ascii=False)
 
 if __name__ == '__main__':
-	# python3 train.py ./data/train.csv.zip ./training_config.json
-	train_cnn_rnn()
+	# specify file name to store data
+	# input fule should be 
+	input_file = sys.argv[1]
+	train_cnn_rnn(input_file)

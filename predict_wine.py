@@ -63,11 +63,12 @@ def map_word_to_index(examples, words_index):
 		x_.append(temp)
 	return x_
 
-def predict_unseen_data():
-	trained_dir = './trained_results_1544380143/'
+def predict_unseen_data(trained_dir,test_file):
+	'''test file should be a csv file here
+	'''
 	if not trained_dir.endswith('/'):
 		trained_dir += '/'
-	test_file = './Wine/wine_test.csv'
+	#test_file = './Wine/wine_test.csv'
 
 	params, words_index, labels, embedding_mat = load_trained_params(trained_dir)
 	x_, y_, df = load_test_data(test_file, labels)
@@ -143,16 +144,6 @@ def predict_unseen_data():
 
 if __name__ == '__main__':
 	# python3 predict.py ./trained_results_1478563595/ ./data/small_samples.csv
-	predict_unseen_data()
-
-
-import sys
-
-def Factorial(n): # return factorial
-    result = 1
-    for i in range (1,n):
-        result = result * i
-    print ("factorial is ",result)
-    return result
-
-print(Factorial(10))
+	trained_dir = sys.argv[1]
+	test_file = sys.argv[2]
+	predict_unseen_data(trained_dir,test_file)
