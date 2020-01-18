@@ -1,3 +1,10 @@
+# -*- coding: utf-8-sig -*-
+"""
+Created on Sun Dec  9 13:39:06 2018
+
+@author: youko
+"""
+
 import os
 import sys
 import json
@@ -23,21 +30,22 @@ def load_trained_params(trained_dir):
 	return params, words_index, labels, embedding_mat
 
 def load_test_data(test_file, labels):
-	df = pd.read_csv(test_file, sep='|')
-	select = ['Descript']
+	df = pd.read_csv(test_file, sep=',',error_bad_lines=False,encoding = 'latin1')
+	select = ['description']
 
-	df = df.dropna(axis=0, how='any', subset=select)
+	#df = df.dropna(axis=0, how='any', subset=['description'])
+   
 	test_examples = df[select[0]].apply(lambda x: data_helper.clean_str(x).split(' ')).tolist()
 
 	num_labels = len(labels)
 	one_hot = np.zeros((num_labels, num_labels), int)
 	np.fill_diagonal(one_hot, 1)
 	label_dict = dict(zip(labels, one_hot))
-
-	y_ = None
-	if 'Category' in df.columns:
-		select.append('Category')
-		y_ = df[select[1]].apply(lambda x: label_dict[x]).tolist()
+   
+	#y_ = None
+	#if 'country' in df.columns:
+	select.append('country')
+	y_ = df[select[1]].apply(lambda x: label_dict[x]).tolist()
 
 	not_select = list(set(df.columns) - set(select))
 	df = df.drop(not_select, axis=1)
@@ -55,11 +63,12 @@ def map_word_to_index(examples, words_index):
 		x_.append(temp)
 	return x_
 
-def predict_unseen_data():
-	trained_dir = './trained_results_1516404693/'
+def predict_unseen_data(trained_dir,test_file):
+	'''test file should be a csv file here
+	'''
 	if not trained_dir.endswith('/'):
 		trained_dir += '/'
-	test_file = './data/small_samples.csv'
+	#test_file = './Wine/wine_test.csv'
 
 	params, words_index, labels, embedding_mat = load_trained_params(trained_dir)
 	x_, y_, df = load_test_data(test_file, labels)
@@ -135,4 +144,6 @@ def predict_unseen_data():
 
 if __name__ == '__main__':
 	# python3 predict.py ./trained_results_1478563595/ ./data/small_samples.csv
-	predict_unseen_data()
+	trained_dir = sys.argv[1]
+	test_file = sys.argv[2]
+	predict_unseen_data(trained_dir,test_file)
