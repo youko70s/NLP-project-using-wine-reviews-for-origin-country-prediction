@@ -30,7 +30,7 @@ In this project, we only use columns `description` and `country`. However, the w
 
 ### preprocessing and preparing
 
-*  [data_helper.py] (https://github.com/youko70s/Using-Wine-Reviews-for-Country-Origin-Prediction/blob/master/data_helper.py): preprocessing and helper function. Preprocessing mainly includes lowercasing the text input and do lemmatizing; helper functions include creating padding, building inverted index for vocabulary, etc.
+*  [data_helper.py](https://github.com/youko70s/Using-Wine-Reviews-for-Country-Origin-Prediction/blob/master/data_helper.py): preprocessing and helper function. Preprocessing mainly includes lowercasing the text input and do lemmatizing; helper functions include creating padding, building inverted index for vocabulary, etc.
 
 * [text_cnn_rnn.py](https://github.com/youko70s/Using-Wine-Reviews-for-Country-Origin-Prediction/blob/master/text_cnn_rnn.py): stores the CNN model.
 
