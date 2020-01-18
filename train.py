@@ -165,5 +165,5 @@ def train_cnn_rnn(input_file):
 if __name__ == '__main__':
 	# specify file name to store data
 	# input fule should be 
-	input_file = sys.argv[1]
-	train_cnn_rnn(input_file)
+	train_file = sys.argv[1]
+	train_cnn_rnn(train_file)
